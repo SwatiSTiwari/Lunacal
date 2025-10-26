@@ -10,6 +10,7 @@ function App() {
   ]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   const tabContent = {
     about: `Hello! I'm Dave, your sales rep here from Salesforce. I've been working at this awesome company for 3 years now.
@@ -42,21 +43,51 @@ Feel free to reach out if you'd like to learn more about how we can help your or
   };
 
   const handlePrevImage = () => {
-    if (currentImageIndex > 0) {
-      setCurrentImageIndex(currentImageIndex - 1);
+    if (selectedImageIndex !== null) {
+      if (selectedImageIndex > 0) {
+        setSelectedImageIndex(selectedImageIndex - 1);
+      }
+    } else {
+      if (currentImageIndex > 0) {
+        setCurrentImageIndex(currentImageIndex - 1);
+      }
     }
   };
 
   const handleNextImage = () => {
-    if (currentImageIndex < Math.max(0, images.length - 3)) {
-      setCurrentImageIndex(currentImageIndex + 1);
+    if (selectedImageIndex !== null) {
+      if (selectedImageIndex < images.length - 1) {
+        setSelectedImageIndex(selectedImageIndex + 1);
+      }
+    } else {
+      if (currentImageIndex < Math.max(0, images.length - 3)) {
+        setCurrentImageIndex(currentImageIndex + 1);
+      }
     }
+  };
+
+  const handleImageClick = (globalIndex: number) => {
+    setSelectedImageIndex(globalIndex);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedImageIndex(null);
   };
 
   const visibleImages = images.slice(currentImageIndex, currentImageIndex + 3);
 
+  const getModalVisibleImages = () => {
+    if (selectedImageIndex === null) return [];
+    if (selectedImageIndex === 0) {
+      return images.slice(0, 2);
+    }
+    return images.slice(selectedImageIndex - 1, selectedImageIndex + 1);
+  };
+
+  const modalVisibleImages = getModalVisibleImages();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#373E44] via-[#2B3238] to-[#191B1F] flex">
+    <div className="min-h-screen bg-gradient-to-br from-[#373E44] via-[#2B3238] to-[#191B1F] flex relative">
       {/* Left Half - Empty but responsive */}
       <div className="w-1/2 hidden lg:block"></div>
 
@@ -196,7 +227,7 @@ Feel free to reach out if you'd like to learn more about how we can help your or
                     }}
                     onMouseEnter={() => setHoveredImageIndex(globalIndex)}
                     onMouseLeave={() => setHoveredImageIndex(null)}
-                    onClick={() => setHoveredImageIndex(isHovered ? null : globalIndex)}
+                    onClick={() => handleImageClick(globalIndex)}
                   >
                     <img
                       src={image}
@@ -210,6 +241,94 @@ Feel free to reach out if you'd like to learn more about how we can help your or
           </div>
         </div>
       </div>
+
+      {/* Image Modal/Lightbox */}
+      {selectedImageIndex !== null && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="w-full max-w-[1200px] px-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Gallery Widget */}
+            <div className="bg-[#363C43] rounded-[18.89px] shadow-[5.67px_5.67px_3.78px_0px_rgba(0,0,0,0.4)] p-4">
+              <div className="flex items-center gap-3 mb-8">
+                <button className="w-[45px] h-[45px] bg-gradient-to-b from-[#303439] to-[#161718] rounded-full flex items-center justify-center shadow-[4px_5px_30px_5px_rgba(16,18,19,1),-5px_-3px_30px_-10px_rgba(150,190,231,1)]">
+                  <HelpCircle className="w-5 h-5 text-[#B0B0B0]" />
+                </button>
+
+                <button className="bg-[#171717] text-white py-4 px-10 rounded-[20px] text-xl font-medium shadow-[0px_4.96px_12.4px_2.48px_rgba(255,255,255,0.05)_inset,9.17px_10.16px_31.73px_0px_rgba(0,0,0,0.57)]">
+                  Gallery
+                </button>
+
+                <div className="flex-1"></div>
+
+                <button
+                  onClick={handleAddImage}
+                  className="bg-[#FFFFFF08] hover:bg-[#FFFFFF15] text-white py-4 px-6 rounded-[104px] text-xs font-semibold shadow-[0px_3.26px_3.26px_0px_rgba(255,255,255,0.15)_inset,0px_3.26px_3.26px_0px_rgba(255,255,255,0.15)_inset,9.17px_10.16px_40.07px_0px_rgba(0,0,0,0.4)] flex items-center gap-2 transition-all uppercase tracking-wide"
+                >
+                  <Plus className="w-4 h-4" />
+                  ADD IMAGE
+                </button>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={handlePrevImage}
+                    disabled={selectedImageIndex === 0}
+                    className="w-[45px] h-[45px] bg-gradient-to-b from-[#303439] to-[#161718] hover:from-[#3a3e43] hover:to-[#1f2123] rounded-full flex items-center justify-center shadow-[4px_5px_30px_5px_rgba(16,18,19,1),-5px_-3px_30px_-10px_rgba(150,190,231,1)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    <ChevronLeft className="w-6 h-6 text-[#6F787C]" />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    disabled={selectedImageIndex >= images.length - 1}
+                    className="w-[45px] h-[45px] bg-gradient-to-b from-[#303439] to-[#161718] hover:from-[#3a3e43] hover:to-[#1f2123] rounded-full flex items-center justify-center shadow-[4px_5px_30px_5px_rgba(16,18,19,1),-5px_-3px_30px_-10px_rgba(150,190,231,1)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    <ChevronRight className="w-6 h-6 text-[#6F787C]" />
+                  </button>
+                </div>
+
+                {/* Grid Icon */}
+                <div className="w-[45px] h-[45px] bg-gradient-to-b from-[#303439] to-[#161718] rounded-full flex items-center justify-center shadow-[4px_5px_30px_5px_rgba(16,18,19,1),-5px_-3px_30px_-10px_rgba(150,190,231,1)]">
+                  <div className="w-5 h-5 grid grid-cols-2 gap-1">
+                    <div className="w-1.5 h-1.5 bg-[#6F787C] rounded-sm"></div>
+                    <div className="w-1.5 h-1.5 bg-[#6F787C] rounded-sm"></div>
+                    <div className="w-1.5 h-1.5 bg-[#6F787C] rounded-sm"></div>
+                    <div className="w-1.5 h-1.5 bg-[#6F787C] rounded-sm"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Gallery Images - Show 2 images */}
+              <div className="flex gap-6 justify-start">
+                {modalVisibleImages.map((image, index) => {
+                  const actualIndex = selectedImageIndex === 0 ? index : selectedImageIndex - 1 + index;
+                  const isSelected = actualIndex === selectedImageIndex;
+
+                  return (
+                    <div
+                      key={actualIndex}
+                      className="flex-1 max-w-[550px] h-[400px] rounded-[24px] overflow-hidden transition-all duration-300"
+                      style={{
+                        transform: isSelected ? 'rotate(0deg) scale(1.02)' : 'rotate(0deg)',
+                        filter: isSelected ? 'grayscale(0)' : 'grayscale(1)',
+                      }}
+                    >
+                      <img
+                        src={image}
+                        alt={`Gallery ${actualIndex + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
