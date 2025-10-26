@@ -9,7 +9,6 @@ function App() {
     '/Rectangle 5160.png'
   ]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
 
   const tabContent = {
     about: `Hello! I'm Dave, your sales rep here from Salesforce. I've been working at this awesome company for 3 years now.
@@ -66,6 +65,10 @@ Feel free to reach out if you'd like to learn more about how we can help your or
           {/* About Me Widget */}
           <div className="bg-[#363C43] rounded-[18.89px] shadow-[5.67px_5.67px_3.78px_0px_rgba(0,0,0,0.4)] p-4">
             <div className="flex items-center gap-2 mb-6">
+              <button className="w-6 h-6 bg-[#4A4E54] rounded-full flex items-center justify-center">
+                <HelpCircle className="w-4 h-4 text-[#B0B0B0]" />
+              </button>
+
               {/* Tabs */}
               <div className="flex-1 bg-[#171717] rounded-[23px] p-1.5 flex gap-1">
                 <button
@@ -100,10 +103,6 @@ Feel free to reach out if you'd like to learn more about how we can help your or
                 </button>
               </div>
 
-              <button className="w-6 h-6 bg-[#4A4E54] rounded-full flex items-center justify-center">
-                <HelpCircle className="w-4 h-4 text-[#B0B0B0]" />
-              </button>
-
               {/* Grid Icon */}
               <div className="w-6 h-6 grid grid-cols-2 gap-0.5">
                 <div className="w-2 h-2 bg-[#4A4E54] rounded-sm"></div>
@@ -134,6 +133,9 @@ Feel free to reach out if you'd like to learn more about how we can help your or
           <div className="bg-[#363C43] rounded-[18.89px] shadow-[5.67px_5.67px_3.78px_0px_rgba(0,0,0,0.4)] p-4">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
+                <button className="w-6 h-6 bg-[#4A4E54] rounded-full flex items-center justify-center">
+                  <HelpCircle className="w-4 h-4 text-[#B0B0B0]" />
+                </button>
                 <button className="bg-[#171717] text-white py-4 px-10 rounded-[20px] text-xl font-medium shadow-[0px_4.96px_12.4px_2.48px_rgba(255,255,255,0.05)_inset,9.17px_10.16px_31.73px_0px_rgba(0,0,0,0.57)]">
                   Gallery
                 </button>
@@ -164,10 +166,6 @@ Feel free to reach out if you'd like to learn more about how we can help your or
                     <ChevronRight className="w-6 h-6 text-[#6F787C]" />
                   </button>
                 </div>
-
-                <button className="w-6 h-6 bg-[#4A4E54] rounded-full flex items-center justify-center">
-                  <HelpCircle className="w-4 h-4 text-[#B0B0B0]" />
-                </button>
               </div>
 
               {/* Grid Icon */}
@@ -181,30 +179,21 @@ Feel free to reach out if you'd like to learn more about how we can help your or
 
             {/* Gallery Images */}
             <div className="flex gap-4 justify-start">
-              {visibleImages.map((image, index) => {
-                const globalIndex = currentImageIndex + index;
-                const isHovered = hoveredImageIndex === globalIndex;
-
-                return (
-                  <div
-                    key={globalIndex}
-                    className="w-[190px] h-[179px] rounded-[24px] overflow-hidden transition-all duration-300 cursor-pointer"
-                    style={{
-                      transform: isHovered ? 'rotate(0deg) scale(1.05)' : 'rotate(-1deg)',
-                      filter: isHovered ? 'grayscale(0)' : 'grayscale(1)',
-                    }}
-                    onMouseEnter={() => setHoveredImageIndex(globalIndex)}
-                    onMouseLeave={() => setHoveredImageIndex(null)}
-                    onClick={() => setHoveredImageIndex(isHovered ? null : globalIndex)}
-                  >
-                    <img
-                      src={image}
-                      alt={`Gallery ${globalIndex + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                );
-              })}
+              {visibleImages.map((image, index) => (
+                <div
+                  key={currentImageIndex + index}
+                  className="w-[190px] h-[179px] rounded-[24px] overflow-hidden grayscale hover:grayscale-0 transition-all duration-300 transform hover:scale-105 hover:rotate-0"
+                  style={{
+                    transform: 'rotate(-1deg)',
+                  }}
+                >
+                  <img
+                    src={image}
+                    alt={`Gallery ${currentImageIndex + index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
