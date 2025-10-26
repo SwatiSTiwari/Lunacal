@@ -68,10 +68,12 @@ Feel free to reach out if you'd like to learn more about how we can help your or
 
   const handleImageClick = (globalIndex: number) => {
     setSelectedImageIndex(globalIndex);
+    setHoveredImageIndex(globalIndex);
   };
 
   const handleCloseModal = () => {
     setSelectedImageIndex(null);
+    setHoveredImageIndex(null);
   };
 
   const visibleImages = images.slice(currentImageIndex, currentImageIndex + 3);
