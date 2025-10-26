@@ -177,13 +177,7 @@ Fast HMR (Hot Module Replacement) with React plugin
 - Safari (latest)
 - Opera (latest)
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## 📝 License
 
@@ -194,17 +188,3 @@ This project is open source and available under the [MIT License](LICENSE).
 **Swati Tiwari**
 - GitHub: [@SwatiSTiwari](https://github.com/SwatiSTiwari)
 - Repository: [Lunacal](https://github.com/SwatiSTiwari/Lunacal)
-
-## 🙏 Acknowledgments
-
-- Design inspiration from modern portfolio interfaces
-- Built with React and Vite for optimal performance
-- Styled with Tailwind CSS for rapid development
-
-## 📞 Support
-
-For issues, questions, or contributions, please open an issue on the [GitHub repository](https://github.com/SwatiSTiwari/Lunacal/issues).
-
----
-
-**Made with ❤️ using React + TypeScript + Tailwind CSS**
